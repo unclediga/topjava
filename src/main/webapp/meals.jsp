@@ -1,4 +1,4 @@
-<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="ru.javawebinar.topjava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -6,10 +6,6 @@
 <head>
     <title>Meals</title>
 </head>
-<%!
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("DD-MM-yyyy");
-%>
-
 <body>
 <section style="width: 900px; margin: auto">
     <table border="1" cellpadding="8" cellspacing="1">
@@ -21,7 +17,7 @@
             <jsp:useBean id="row" type="ru.javawebinar.topjava.model.MealTo"/>
             <tr style="background-color: <%= row.isExcess() ? "red" : "lightblue" %> ">
                 <td>
-                    <%=row.getDateTime().format(FORMATTER) %>
+                    ${DateUtil.formatHTMLDate(row.dateTime)}
                 </td>
                 <td>
                         ${row.description}

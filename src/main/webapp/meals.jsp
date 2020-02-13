@@ -1,4 +1,4 @@
-<%@ page import="ru.javawebinar.topjava.util.DateUtil" %>
+<%@ page import="ru.javawebinar.topjava.util.DateTimeUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -15,9 +15,9 @@
         <jsp:useBean id="list" scope="request" type="java.util.List"/>
         <c:forEach var="row" items="${list}">
             <jsp:useBean id="row" type="ru.javawebinar.topjava.model.MealTo"/>
-            <tr style="background-color: <%= row.isExcess() ? "red" : "lightblue" %> ">
+            <tr style="background-color: ${row.excess ? "red" : "lightblue"} ">
                 <td>
-                    ${DateUtil.formatHTMLDate(row.dateTime)}
+                    ${DateTimeUtil.formatHTMLDate(row.dateTime)}
                 </td>
                 <td>
                         ${row.description}

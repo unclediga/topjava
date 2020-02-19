@@ -21,19 +21,20 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     private final int userId = SecurityUtil.authUserId();
+    private final int userCaloriesPerDay = SecurityUtil.authUserCaloriesPerDay();
 
     @Autowired
     private MealService service;
 
-    public MealTo get(int id) {
+    public Meal get(int id) {
         log.info("get {}", id);
-        return MealsUtil.createTo(service.get(id, userId));
+        return service.get(id, userId);
     }
 
-    public MealTo create(Meal meal) {
+    public Meal create(Meal meal) {
         log.info("create {}", meal);
         checkNew(meal);
-        return MealsUtil.createTo(service.create(meal, userId));
+        return service.create(meal, userId);
     }
 
     public void delete(int id) {
@@ -48,13 +49,21 @@ public class MealRestController {
     }
 
     public List<MealTo> getTos() {
-        return MealsUtil.getTos(service.getAll(userId),
-                MealsUtil.DEFAULT_CALORIES_PER_DAY);
+        return MealsUtil
+                .getTos(
+                        service.getAll(userId),
+                        userCaloriesPerDay);
     }
 
     public List<MealTo> getFilteredTos(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        return MealsUtil.getFilteredTos(service.getFiltered(userId, startDate, endDate),
-                MealsUtil.DEFAULT_CALORIES_PER_DAY,
-                startTime, endTime);
+        return MealsUtil
+                .getFilteredTos(
+                        service.getFiltered(
+                                userId,
+                                startDate == null ? LocalDate.MIN : startDate,
+                                endDate == null ? LocalDate.MAX : endDate),
+                        userCaloriesPerDay,
+                        startTime == null ? LocalTime.MIN : startTime,
+                        endTime == null ? LocalTime.MAX : endTime);
     }
 }

@@ -22,7 +22,10 @@ public class SpringMain {
             adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ROLE_ADMIN));
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
             System.out.println("meal 2 :" + mealRestController.get(2));
-            List<MealTo> filteredTos = mealRestController.getFilteredTos(LocalDate.of(2020, 1, 31), LocalTime.of(10, 0), LocalDate.of(2020, 1, 31), LocalTime.of(13, 0));
+            List<MealTo> filteredTos = mealRestController
+                    .getFilteredTos(
+                            LocalDate.of(2020, 1, 31), LocalTime.of(10, 0),
+                            LocalDate.of(2020, 1, 31), LocalTime.of(13, 0));
             filteredTos.forEach(System.out::println);
         }
     }

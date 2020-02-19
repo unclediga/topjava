@@ -7,7 +7,6 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import java.time.LocalDate;
 import java.util.Collection;
 
-import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
@@ -20,7 +19,7 @@ public class MealService {
     }
 
     public Meal create(Meal meal, int userId) {
-        return checkNotFound(repository.save(meal, userId), "inconsistent userId");
+        return repository.save(meal, userId);
     }
 
     public void delete(int id, int userId) {

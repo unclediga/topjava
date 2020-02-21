@@ -20,49 +20,47 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 @Controller
 public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
-    private final int userId = SecurityUtil.authUserId();
-    private final int userCaloriesPerDay = SecurityUtil.authUserCaloriesPerDay();
 
     @Autowired
     private MealService service;
 
     public Meal get(int id) {
         log.info("get {}", id);
-        return service.get(id, userId);
+        return service.get(id, SecurityUtil.authUserId());
     }
 
     public Meal create(Meal meal) {
         log.info("create {}", meal);
         checkNew(meal);
-        return service.create(meal, userId);
+        return service.create(meal, SecurityUtil.authUserId());
     }
 
     public void delete(int id) {
         log.info("delete {}", id);
-        service.delete(id, userId);
+        service.delete(id, SecurityUtil.authUserId());
     }
 
     public void update(Meal meal, int id) {
         log.info("update {} with id={}", meal, id);
         assureIdConsistent(meal, id);
-        service.update(meal, userId);
+        service.update(meal, SecurityUtil.authUserId());
     }
 
     public List<MealTo> getTos() {
         return MealsUtil
                 .getTos(
-                        service.getAll(userId),
-                        userCaloriesPerDay);
+                        service.getAll(SecurityUtil.authUserId()),
+                        SecurityUtil.authUserCaloriesPerDay());
     }
 
     public List<MealTo> getFilteredTos(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         return MealsUtil
                 .getFilteredTos(
                         service.getFiltered(
-                                userId,
+                                SecurityUtil.authUserId(),
                                 startDate == null ? LocalDate.MIN : startDate,
                                 endDate == null ? LocalDate.MAX : endDate),
-                        userCaloriesPerDay,
+                        SecurityUtil.authUserCaloriesPerDay(),
                         startTime == null ? LocalTime.MIN : startTime,
                         endTime == null ? LocalTime.MAX : endTime);
     }

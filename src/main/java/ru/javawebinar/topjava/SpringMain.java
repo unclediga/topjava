@@ -27,6 +27,8 @@ public class SpringMain {
                             LocalDate.of(2020, 1, 31), LocalTime.of(10, 0),
                             LocalDate.of(2020, 1, 31), LocalTime.of(13, 0));
             filteredTos.forEach(System.out::println);
+            MealRestController mealRestController2 = appCtx.getBean(MealRestController.class);
+            System.out.println("equals&:" + mealRestController.equals(mealRestController));
         }
     }
 }

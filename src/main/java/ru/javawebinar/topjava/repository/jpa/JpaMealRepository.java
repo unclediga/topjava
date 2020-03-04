@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,30 +21,34 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
-        User ref = em.getReference(User.class, userId);
-        meal.setUser(ref);
         if (meal.isNew()) {
+            User ref = em.getReference(User.class, userId);
+            meal.setUser(ref);
             em.persist(meal);
             return meal;
-        } else {
-            if (get(meal.getId(), meal.getUser().getId()) == null) {
-                throw new NotFoundException("No meals id[" + meal.getId() + "] found!");
-            }
+        } else if (get(meal.getId(), userId) != null) {
+            User ref = em.getReference(User.class, userId);
+            meal.setUser(ref);
             return em.merge(meal);
         }
+        return null;
     }
 
     @Override
     @Transactional
     public boolean delete(int id, int userId) {
-        Query query = em.createQuery("DELETE FROM Meal m WHERE m.id=:id AND m.user.id = :userId");
-        return query.setParameter("id", id).setParameter("userId", userId).executeUpdate() != 0;
+        Query query = em.createNamedQuery(Meal.DELETE)
+                .setParameter("id", id).setParameter("userId", userId);
+        return query.executeUpdate() != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        Meal meal = em.find(Meal.class, id);
-        return meal == null || meal.getUser().getId() != userId ? null : meal;
+        List<Meal> meals = em.createQuery("SELECT m FROM Meal m WHERE m.id = :id AND m.user.id = :userId", Meal.class)
+                .setParameter("id", id)
+                .setParameter("userId", userId)
+                .getResultList();
+        return meals.size() == 1 ? meals.get(0) : null;
     }
 
     @Override

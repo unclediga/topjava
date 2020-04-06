@@ -7,11 +7,11 @@ import ru.javawebinar.topjava.to.MealTo;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.topjava.MealTestData.MEALS;
-import static ru.javawebinar.topjava.MealTestData.MEALTO_MATCHER;
 import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 import static ru.javawebinar.topjava.util.MealsUtil.getTos;
@@ -47,7 +47,7 @@ class RootControllerTest extends AbstractControllerTest {
                             @Override
                             public void assertion(List<MealTo> actual) throws AssertionError {
                                 List<MealTo> tos = getTos(MEALS, DEFAULT_CALORIES_PER_DAY);
-                                MEALTO_MATCHER.assertMatch(actual, tos);
+                                assertThat(actual).isEqualTo(tos);
                             }
                         }
                 ));

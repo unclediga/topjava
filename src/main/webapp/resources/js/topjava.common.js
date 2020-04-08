@@ -1,5 +1,5 @@
 var context, form;
-var params;
+
 function makeEditable(ctx) {
     context = ctx;
     form = $('#detailsForm');
@@ -33,10 +33,15 @@ function deleteRow(id) {
 }
 
 function updateTable() {
-    params = $("#filterForm").serialize();
-    $.get(context.ajaxUrl, params, function (data) {
-        context.datatableApi.clear().rows.add(data).draw();
-    });
+    if (jQuery.isEmptyObject(document.forms["filterForm"])) {
+        $.get(context.ajaxUrl, function (data) {
+            context.datatableApi.clear().rows.add(data).draw();
+        });
+    } else {
+        $.get(context.ajaxUrl + "filter", $("form#filterForm").serialize(), function (data) {
+            context.datatableApi.clear().rows.add(data).draw();
+        });
+    }
 }
 
 function save() {

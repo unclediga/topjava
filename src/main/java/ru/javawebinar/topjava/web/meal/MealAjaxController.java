@@ -16,7 +16,13 @@ import java.util.List;
 @RequestMapping(value = "/ajax/meals")
 public class MealAjaxController extends AbstractMealController {
 
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<MealTo> getAll() {
+        return super.getAll();
+    }
+
+    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MealTo> getBetween(
             @RequestParam @Nullable LocalDate startDate,
             @RequestParam @Nullable LocalTime startTime,
@@ -40,8 +46,6 @@ public class MealAjaxController extends AbstractMealController {
         Meal meal = new Meal(id, dateTime, description, calories);
         if (meal.isNew()) {
             super.create(meal);
-        } else {
-            super.update(meal, id);
         }
     }
 }

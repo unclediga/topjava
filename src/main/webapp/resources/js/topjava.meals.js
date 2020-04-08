@@ -27,10 +27,22 @@ $(function () {
                 "order": [
                     [
                         0,
-                        "asc"
+                        "desc"
                     ]
                 ]
             })
         }
     );
+
+    document.getElementById("filterForm").addEventListener("submit", function(event){
+        event.preventDefault()
+    });
+
 });
+
+function filter() {
+    updateTable();
+}
+function clearFilter() {
+    document.forms["filterForm"].reset();
+}
